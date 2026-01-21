@@ -36,7 +36,7 @@
 >
 > Please be aware that this project was significantly constructed using Artificial Intelligence.
 >
-> *   **Author's Rolie**: Logic formulation, game mechanics research, and result verification (Quality Assurance).
+> *   **Author's Role**: Logic formulation, game mechanics research, and result verification (Quality Assurance).
 > *   **AI's Role**: Code architecture, Python implementation, refactoring, and documentation generation.
 > 
 > *The author possesses zero manual coding capability in Python. This tool demonstrates the power of AI-Human collaboration.*
@@ -253,6 +253,13 @@ calculator/
     ├── freyja.py        # HP Alteration Logic
     └── ryan.py          # Lost HP Bonus Logic
 ```
+
+---
+
+## 👤 Credits
+
+> **In-Game Name:** `snowb4ll`
+> **Server:** `19`
 
 ---
 
