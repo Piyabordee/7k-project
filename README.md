@@ -263,6 +263,9 @@ calculator/
 > **In-Game Name:** `snowb4ll`
 > **Server:** `19`
 
+### 🧠 Formula Credits
+> Damage calculation formulas by **BelXenonZ** and **AcidAqua**
+
 ---
 
 ## 📜 License
