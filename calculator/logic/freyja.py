@@ -3,7 +3,10 @@ Freyja Special Logic - HP Alteration Calculator
 HP Alteration = ปรับ HP เป้าหมายเหลือ X% (ไม่ใช่เพิ่มดาเมจ)
 """
 
+from __future__ import annotations
+
 from decimal import Decimal, ROUND_DOWN
+from typing import Any
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -37,7 +40,7 @@ def calculate_freyja_damage(
     skill_hits: int,
     hp_target: Decimal,
     hp_alteration: Decimal
-) -> dict:
+) -> dict[str, Any]:
     """
     คำนวณดาเมจ Freyja ทั้ง 4 กรณี:
     1. ดาเมจคริปกติ (ไม่มี HP Alteration)
@@ -91,7 +94,7 @@ def calculate_freyja_damage(
     }
 
 
-def print_freyja_results(results: dict, hp_target: Decimal):
+def print_freyja_results(results: dict[str, Any], hp_target: Decimal) -> None:
     """แสดงผลลัพธ์ Freyja แบบเต็ม"""
     hits = results["skill_hits"]
     hp_alt = results["hp_alteration_percent"]

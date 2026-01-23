@@ -4,7 +4,10 @@ Ryan Special Logic - Lost HP Bonus & Weakness Extra Damage Calculator
 - WEAK_SKILL_DMG: ดาเมจเสริมเมื่อติดจุดอ่อน
 """
 
+from __future__ import annotations
+
 from decimal import Decimal, ROUND_DOWN
+from typing import Any
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -51,7 +54,7 @@ def calculate_ryan_damage(
     skill_hits: int,
     lost_hp_bonus: Decimal,
     target_hp_percent: Decimal
-) -> dict:
+) -> dict[str, Any]:
     """
     คำนวณดาเมจ Ryan ทั้ง 4 กรณี:
     1. ดาเมจคริ (HP เต็ม)
@@ -135,7 +138,7 @@ def calculate_ryan_damage(
     }
 
 
-def print_ryan_results(results: dict):
+def print_ryan_results(results: dict[str, Any]) -> None:
     """แสดงผลลัพธ์ Ryan แบบเต็ม"""
     hits = results["skill_hits"]
     lost_hp = results["lost_hp_bonus"]

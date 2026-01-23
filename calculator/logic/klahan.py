@@ -4,7 +4,10 @@ Klahan Special Logic - HP Condition Bonus Calculator
 - Skill 2 (Flying Tiger): +115% bonus เมื่อ HP <= 50%
 """
 
+from __future__ import annotations
+
 from decimal import Decimal, ROUND_DOWN
+from typing import Any
 import sys
 import os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
@@ -25,7 +28,7 @@ def calculate_klahan_damage(
     eff_def: Decimal,
     skill_hits: int,
     skill_name: str
-) -> dict:
+) -> dict[str, Any]:
     """
     คำนวณดาเมจ Klahan ทั้ง 4 กรณี:
     1. ดาเมจคริ (ไม่มี HP bonus)
@@ -132,7 +135,7 @@ def calculate_klahan_damage(
     }
 
 
-def print_klahan_results(results: dict):
+def print_klahan_results(results: dict[str, Any]) -> None:
     """แสดงผลลัพธ์ Klahan แบบเต็ม"""
     hits = results["skill_hits"]
     skill_name = results["skill_name"]
