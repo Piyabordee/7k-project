@@ -126,135 +126,49 @@ Select **Sun Wukong** in Castle Mode to see the breakdown:
 ---
 
 
-## 🏆 Character Capability Showcases
+## 🏆 Character Showcases
 
-See how the calculator handles complex unique mechanics for top-tier characters.
+See detailed output examples for all characters: **[📄 SHOWCASES.md](docs/SHOWCASES.md)**
 
-### ⚔️ Ryan - Executioner Logic
-*Calculates **Lost HP** bonus, dynamically scaling damage based on enemy remaining health.*
+---
 
-```text
-============================================================
-  ⚔️ Ryan - Gale Slash Calculator ⚔️
-============================================================
+## 👾 Supported Characters
 
-  📊 HP เป้าหมายเหลือ: 30.00%
-  ⚡ Lost HP Bonus: สูงสุด +50.00%
-  🔥 Weakness Extra Damage: +270.00%
-
-------------------------------------------------------------
-  [4] ดาเมจติดจุดอ่อน (HP เหลือ 30.00%) 🔥 MAX
-------------------------------------------------------------
-  Final: 1,254,880
-         (+270.00% Weakness Extra, +35.0% Lost HP)
-         (5 hits x 250,976/hit)
-
-============================================================
-  💀 ดาเมจสูงสุด: 1,254,880
-============================================================
-```
-
-### 🌟 Freyja - HP Alteration
-*Simulates "Divinity" checks to compare absolute HP reduction vs raw damage potential.*
-
-```text
-==================================================
-  🌟 Freyja - HP Alteration Calculator 🌟
-==================================================
-
-  📊 HP Target: 100,000,000
-  ⚡ HP Alteration: 39.0% (มอนเหลือ 39.0%)
-
---------------------------------------------------
-  ดาเมจ HP Alteration (ถ้ามี 4 Divinity stacks)
---------------------------------------------------
-  HP Alteration:   61,000,000
-                   (มอนเหลือ 39.0% จาก 100,000,000 HP)
-
---------------------------------------------------
-  ดาเมจรวม (สกิล + HP Alteration)
---------------------------------------------------
-  จุดอ่อน + HP Alt:    63,450,200
-```
-
-### 🐯 Klahan - Conditional Bonus
-*Automatically applies "+135% Bonus Damage" conditions based on enemy HP threshold.*
-
-```text
-============================================================
-  🐯 Klahan - Gale Blast Calculator 🐯
-============================================================
-
-  📊 Base SKILL_DMG: 160.00%
-  ⚡ HP Bonus: +135.00% (เมื่อ HP >= 50%)
-  🔥 Total SKILL_DMG: 295.00%
-
-------------------------------------------------------------
-  [4] ดาเมจติดจุดอ่อน (HP >= 50%) 🔥 MAX
-------------------------------------------------------------
-  Final: 845,600 (SKILL_DMG: 295.00%)
-         (2 hits x 422,800/hit)
-```
-
-### 🔥 Espada - Hybrid Scaling
-*Compares Raw Damage vs HP-Based Damage to find the highest output.*
-
-```text
-============================================================
-  Espada Special Calculation (4 กรณี)
-============================================================
-
-[2] คริ + HP-based (HP: 2,752,900):
-    RAW_DMG = 3,785,236.80
-    Final = 4,497,975
-
-[4] จุดอ่อน (+35%) + HP-based:
-    RAW_DMG = 4,428,727.05
-    Final = 5,262,630
-
-============================================================
->>> ดาเมจสูงสุด (จุดอ่อน+HP): 5,262,630 <<<
-============================================================
-```
+| Character | _class | Special Mechanics |
+|:----------|:-------|:------------------|
+| Sun Wukong | Balance | Castle Mode (คริขั้นต่ำ) |
+| Espada | Magic | HP-Based Damage |
+| Freyja | Magic | HP Alteration |
+| Ryan | Attack | Lost HP Bonus |
+| Klahan | Attack | HP Condition Bonus |
+| Teo | Attack | Bonus Crit DMG |
+| Miho | Magic | Standard |
+| Pascal | Magic | Standard |
+| Rachel | Magic | DEF Reduce |
+| Yeonhee | Magic | HP-Based |
 
 ---
 
 ## ⚙️ Configuration
 
-Modify `calculator/config.json` to match your in-game stats.
-
-```json
-{
-  "Weapon_Set": 3,            // 0=None, 1=Weak, 2=Crit, 3=Hydra
-  "Formation": 62.00,         // Formation Bonus (%)
-  "ATK_CHAR": 4134.00,        // Character Base Attack
-  "CRIT_DMG": 306.00,         // Critical Damage (%)
-  "DMG_AMP_BUFF": 0.00,       // Ring/Accessory Bonus
-  "ATK_PET": 564.00,          // Pet Attack
-  "BUFF_ATK_PET": 21.00       // Pet Buff (%)
-}
-```
+Modify `calculator/config.json` to match your in-game stats. See [config.json](calculator/config.json) for full template.
 
 ---
 
-## 📂 Project Structure
+<details>
+<summary><b>📂 Project Structure</b> (click to expand)</summary>
 
 ```bash
 calculator/
-├── main.py              # Application Entry Point
-├── menu.py              # CLI Interface Logic
+├── main.py              # Entry Point
+├── menu.py              # CLI Interface
 ├── damage_calc.py       # Core Math Engine
-├── constants.py         # Static Game Data (Rarity/Class Stats)
 ├── config.json          # User Settings
 ├── characters/          # Hero Database (JSON)
-│   ├── sun_wukong.json
-│   ├── freyja.json
-│   └── ...
-└── logic/               # Specialized Hero Algorithms
-    ├── sun_wukong.py    # Castle Rush Logic
-    ├── freyja.py        # HP Alteration Logic
-    └── ryan.py          # Lost HP Bonus Logic
+└── logic/               # Specialized Algorithms
 ```
+
+</details>
 
 ---
 

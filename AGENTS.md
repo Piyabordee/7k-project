@@ -586,6 +586,10 @@ sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 4. **ถ้ามี logic พิเศษ:**
    - สร้างไฟล์ใน `logic/`
    - เพิ่ม import และเรียกใช้ใน `main.py`
+5. **อัพเดท `docs/SHOWCASES.md`:**
+   - ถ้ามี **logic พิเศษ** → เพิ่ม showcase section ใหม่
+   - ถ้าเป็น **Standard** → เพิ่มแค่แถวในตาราง "Standard Characters"
+   - ⚠️ **ระวัง:** อย่าเพิ่ม showcase แบบเต็มๆ ถ้าไม่มี mechanic พิเศษ (จะซ้ำซ้อน)
 
 ### การแก้ไขไฟล์ตามหน้าที่
 
