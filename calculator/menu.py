@@ -19,8 +19,8 @@ def select_mode() -> tuple[str, dict[str, Any]]:
     choice = input("\nเลือก [1-3]: ").strip()
     
     if choice == "3":
-        print(">>> โหมด: คำนวน ATK (Total ATK Only)")
-        return "atk_only", {}
+        print(">>> โหมด: เปรียบเทียบ ATK")
+        return "atk_compare", {}
     elif choice == "2":
         # ถามเลือกห้อง
         print("\n--- เลือกห้อง (Select Room) ---")
@@ -184,3 +184,33 @@ def select_atk_base() -> tuple[Decimal, str]:
     # Default
     print(">>> Invalid selection, using default (Legend Magic: 1500)")
     return Decimal("1500"), "Legend Magic (Default)"
+
+
+def input_compare_values(config_values: dict[str, Decimal]) -> dict[str, Decimal]:
+    """
+    ให้ผู้ใช้กรอกค่าเปรียบเทียบ 2 อย่าง (Formation, ATK_CHAR)
+    Returns: dict ของค่าที่ผู้ใช้กรอก
+    """
+    print("\n--- กรอกค่าเปรียบเทียบ (Input Compare Values) ---")
+    print(f"ค่าปัจจุบันจาก config.json:")
+    print(f"  Formation: {config_values['Formation']}%")
+    print(f"  ATK_CHAR: {config_values['ATK_CHAR']}")
+    print("\n(กด Enter เพื่อใช้ค่าเดิม)")
+    
+    compare_values = {}
+    
+    # Formation
+    formation_input = input(f"Formation ใหม่ [{config_values['Formation']}]: ").strip()
+    if formation_input:
+        compare_values["Formation"] = Decimal(formation_input)
+    else:
+        compare_values["Formation"] = config_values["Formation"]
+    
+    # ATK_CHAR
+    atk_char_input = input(f"ATK_CHAR ใหม่ [{config_values['ATK_CHAR']}]: ").strip()
+    if atk_char_input:
+        compare_values["ATK_CHAR"] = Decimal(atk_char_input)
+    else:
+        compare_values["ATK_CHAR"] = config_values["ATK_CHAR"]
+    
+    return compare_values

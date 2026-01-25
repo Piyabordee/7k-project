@@ -108,7 +108,7 @@ python main.py
 --- Select Mode ---
   1. Standard Mode    (Uses local config.json)
   2. Castle Mode      (Loads Room 1/2 Monster Presets)
-  3. Quick ATK Calc   (Calculates Total Attack only)
+  3. ATK Compare      (Compare ATK between configs)
 ```
 
 ### 👑 Castle Mode Example
