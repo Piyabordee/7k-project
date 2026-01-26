@@ -296,6 +296,64 @@ def main():
         
         print_espada_results(espada_result, weak_dmg, final_dmg_hp)
         return
+
+    # ตรวจสอบว่าเป็น Biscuit หรือไม่ (ใช้ logic พิเศษ - Dual Scaling ATK + DEF)
+    if char_name and char_name.lower() == "biscuit":
+        from logic.biscuit import calculate_biscuit_damage, print_biscuit_results
+        
+        # อ่านค่า DEF_CHAR, DEF_PET จาก config หรือถาม User
+        print("\n--- Biscuit Special Stats Input ---")
+        try:
+            default_def_char = config.get("DEF_CHAR", "0")
+            in_def_char = input(f"Enter DEF_CHAR (Default {default_def_char}): ").strip()
+            def_char = Decimal(in_def_char) if in_def_char else Decimal(str(default_def_char))
+            
+            default_def_pet = config.get("DEF_PET", "0")
+            in_def_pet = input(f"Enter DEF_PET (Default {default_def_pet}): ").strip()
+            def_pet = Decimal(in_def_pet) if in_def_pet else Decimal(str(default_def_pet))
+        except Exception as e:
+            print(f"Input Error: {e}. Using config values.")
+            def_char = get_decimal(config, "DEF_CHAR", "0")
+            def_pet = get_decimal(config, "DEF_PET", "0")
+        
+        # Biscuit มี 2 parts: ATK scaling (SKILL_DMG) + DEF scaling (SKILL_DMG_fromDef)
+        # เราต้องหาค่า SKILL_DMG ที่เป็น part ของ DEF
+        # สมมติว่าใน config json เก็บแยก หรือถ้าไม่ได้แยก เราอาจต้อง hardcode หรือดึงจาก _notes?
+        # User prompt indicates Biscuit config has "Skill 2: +135% DEF Scaling" in _notes
+        # But wait, in the JSON we made:
+        # "skill2": { "SKILL_DMG": 115.00, ... }
+        # The DEF scaling (135%) wasn't in a specific field in the JSON structure I created, only in notes.
+        # I need to EXTRACT it or rely on user adding it to config.
+        # "SKILL_DMG_fromDef" is what logic.biscuit expects.
+        # Let's check config for "SKILL_DMG_fromDef", default to 135 if skill is skill2 (Leap Attack).
+        
+        skill_dmg_from_def = get_decimal(config, "SKILL_DMG_DEF", "0")
+        
+        # Auto-detect check removed as user provided it in JSON
+        if skill_dmg_from_def == 0 and "Leap Attack" in skill_config.get("_name", ""):
+             # Fallback if not updated in json yet, but user just updated it.
+             # Let's keep a fallback or just trust the config.
+             # User said "Use this", so I rely on config.
+             pass
+        
+        biscuit_result = calculate_biscuit_damage(
+            total_atk=total_atk,
+            skill_dmg_atk=skill_dmg,
+            skill_dmg_def=skill_dmg_from_def,
+            crit_dmg=crit_dmg,
+            weak_dmg=weak_dmg,
+            dmg_amp_buff=dmg_amp_buff,
+            dmg_amp_debuff=dmg_amp_debuff,
+            dmg_reduction=dmg_reduction,
+            eff_def=effective_def,
+            skill_hits=skill_hits,
+            def_char=def_char,
+            def_pet=def_pet,
+            final_dmg_hp=final_dmg_hp
+        )
+        
+        print_biscuit_results(biscuit_result)
+        return
     
     # 5. Final Damage (ต่อ 1 hit) - สำหรับตัวละครปกติ
     final_dmg_crit = calculate_final_dmg(raw_dmg_crit, effective_def)

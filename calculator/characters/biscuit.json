@@ -1,0 +1,27 @@
+{
+    "_character": "Biscuit",
+    "_rarity": "legend",
+    "_class": "support",
+    "_element": "Dark",
+    "DEF_REDUCE": 24.00,
+    "_source": "https://gamewith.net/sevenknights-rebirth/70492",
+    "_skills": {
+        "skill2": {
+            "_name": "Leap Attack (บน)",
+            "SKILL_DMG": 100.00,
+            "SKILL_HITS": 1,
+            "Ignore_DEF": 40.00,
+            "SKILL_DMG_DEF": 115.00
+        },
+        "skill1": {
+            "_name": "Equipment Enhancement (ล่าง)",
+            "SKILL_DMG": 0.00,
+            "SKILL_HITS": 1
+        }
+    },
+    "_notes": [
+        "Passive: DEF Reduce 24% (Always Active)",
+        "Skill 2: +135% DEF Scaling (Dual Stats)",
+        "Skill 1: Boss DMG +40%, Weakness Rate +54%"
+    ]
+}
