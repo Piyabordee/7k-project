@@ -42,6 +42,7 @@ from display import (
     print_final_damage_results,
     print_espada_results,
     print_both_skills_results,
+    print_kill_status_block,
 )
 
 
@@ -353,6 +354,18 @@ def main():
         )
         
         print_biscuit_results(biscuit_result)
+        
+        # Castle Mode Check (ถ้าเลือกโหมด 2 มี monster_preset)
+        if monster_preset and monster_preset.get("HP_Target"):
+            hp_target = Decimal(monster_preset["HP_Target"])
+            dmg_normal = biscuit_result["total_skill_dmg_normal"]
+            dmg_crit = biscuit_result["total_skill_dmg_crit"]
+            
+            print_kill_status_block(
+                hp_target,
+                dmg_crit, "คริ",
+                dmg_normal, "ธรรมดา"
+            )
         return
     
     # 5. Final Damage (ต่อ 1 hit) - สำหรับตัวละครปกติ

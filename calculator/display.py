@@ -140,6 +140,35 @@ def calc_atk_needed(current_dmg: int, monster_hp: int, current_atk: Decimal) -> 
     return int(atk_needed) + 1  # ปัดขึ้น
 
 
+def print_kill_status_block(hp_target: Decimal, dmg_1: Decimal, label_1: str, dmg_2: Decimal, label_2: str) -> None:
+    """แสดงสถานะการฆ่ามอนสเตอร์ (Overkill / Remaining)"""
+    hp_int = int(hp_target)
+    
+    print("\n" + "-" * 60)
+    print(f"  🐉 HP มอนสเตอร์: {hp_int:,}")
+    print("-" * 60)
+    
+    # Check 1
+    if int(dmg_1) >= hp_int:
+        overkill = int(dmg_1) - hp_int
+        print(f"  💀 [{label_1}] มอนตาย! (เกิน {overkill:,})")
+    else:
+        remaining_hp = hp_int - int(dmg_1)
+        remaining_percent = (remaining_hp / hp_int) * 100
+        print(f"  ❌ [{label_1}] มอนไม่ตาย ขาด {remaining_percent:.1f}% ({remaining_hp:,})")
+    
+    # Check 2
+    if int(dmg_2) >= hp_int:
+        overkill = int(dmg_2) - hp_int
+        print(f"  💀 [{label_2}] มอนตาย! (เกิน {overkill:,})")
+    else:
+        remaining_hp = hp_int - int(dmg_2)
+        remaining_percent = (remaining_hp / hp_int) * 100
+        print(f"  ❌ [{label_2}] มอนไม่ตาย ขาด {remaining_percent:.1f}% ({remaining_hp:,})")
+    
+    print("-" * 60)
+
+
 def get_hp_status(damage: int, monster_hp: int, current_atk: Decimal) -> str:
     """สร้างข้อความเลือดมอน"""
     if monster_hp <= 0:
@@ -282,29 +311,11 @@ def print_both_skills_results(
     print(f"  🎯 ดาเมจรวม (คริ): {int(total_damage_crit):,}")
     print(f"  🎯 ดาเมจรวม (จุดอ่อน): {int(total_damage_weak):,}")
     
-    # เช็คว่ามอนตายไหม
-    hp_int = int(hp_target)
-    
-    print("\n" + "-" * 60)
-    print(f"  🐉 HP มอนสเตอร์: {hp_int:,}")
-    print("-" * 60)
-    
-    # กรณีคริ
-    if int(total_damage_crit) >= hp_int:
-        overkill = int(total_damage_crit) - hp_int
-        print(f"  💀 [คริ] มอนตาย! (เกิน {overkill:,})")
-    else:
-        remaining_hp = hp_int - int(total_damage_crit)
-        remaining_percent = (remaining_hp / hp_int) * 100
-        print(f"  ❌ [คริ] มอนไม่ตาย ขาด {remaining_percent:.1f}% ({remaining_hp:,})")
-    
-    # กรณีจุดอ่อน
-    if int(total_damage_weak) >= hp_int:
-        overkill = int(total_damage_weak) - hp_int
-        print(f"  💀 [จุดอ่อน] มอนตาย! (เกิน {overkill:,})")
-    else:
-        remaining_hp = hp_int - int(total_damage_weak)
-        remaining_percent = (remaining_hp / hp_int) * 100
-        print(f"  ❌ [จุดอ่อน] มอนไม่ตาย ขาด {remaining_percent:.1f}% ({remaining_hp:,})")
+    # เช็คว่ามอนตายไหม using reusable function
+    print_kill_status_block(
+        hp_target, 
+        total_damage_crit, "คริ", 
+        total_damage_weak, "จุดอ่อน"
+    )
     
     print("=" * 60)
