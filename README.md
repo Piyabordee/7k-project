@@ -162,6 +162,7 @@ Modify `calculator/config.json` to match your in-game stats. See [config.json](c
 calculator/
 ├── main.py              # Entry Point
 ├── menu.py              # CLI Interface
+├── atk_compare_mode.py  # ATK Comparison Logic
 ├── damage_calc.py       # Core Math Engine
 ├── config.json          # User Settings
 ├── characters/          # Hero Database (JSON)

@@ -39,6 +39,7 @@ python main.py
     ├── main.py              # Entry Point - orchestrates all modules
     ├── config_loader.py     # Load and merge config files
     ├── menu.py              # UI/Menu selection (mode, character, skill)
+    ├── atk_compare_mode.py  # ATK Comparison Mode logic
     ├── display.py           # All display/output functions
     ├── damage_calc.py       # Core calculation formulas
     ├── constants.py         # Constants (DEF_MODIFIER, ATK_BASE)
@@ -602,6 +603,7 @@ sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
 | Need to | Modify File |
 |---------|-------------|
 | Add/edit UI/Menu | `menu.py` |
+| Add/edit ATK Compare | `atk_compare_mode.py` |
 | Add/edit display | `display.py` |
 | Add/edit config loading | `config_loader.py` |
 | Add/edit formulas | `damage_calc.py` |

@@ -27,7 +27,8 @@ from config_loader import (
     merge_configs,
     get_decimal,
 )
-from menu import select_mode, select_character, select_skill, select_atk_base, input_compare_values
+from menu import select_mode, select_character, select_skill
+from atk_compare_mode import run_atk_compare_mode
 from display import (
     print_header,
     print_character_info,
@@ -51,71 +52,7 @@ def main():
     mode, monster_preset = select_mode()
     
     if mode == "atk_compare":
-        # โหลด user config มาเป็นค่าฐาน
-        user_config = load_user_config()
-        
-        # ดึงค่าปัจจุบันจาก config
-        current_values = {
-            "Formation": get_decimal(user_config, "Formation", "0"),
-            "ATK_CHAR": get_decimal(user_config, "ATK_CHAR", "4000"),
-        }
-        
-        # ค่าพื้นฐานอื่นๆ (ไม่เปลี่ยน)
-        atk_pet = get_decimal(user_config, "ATK_PET", "371")
-        potential_pet = get_decimal(user_config, "Potential_PET", "21")
-        buff_atk = get_decimal(user_config, "BUFF_ATK", "0")
-        buff_atk_pet = get_decimal(user_config, "BUFF_ATK_PET", "17")
-        
-        # เลือก ATK_BASE
-        atk_base, atk_base_desc = select_atk_base()
-        
-        # รับค่าเปรียบเทียบจากผู้ใช้
-        compare_values = input_compare_values(current_values)
-        
-        print_calculation_header()
-        
-        # คำนวณ Total ATK - ค่าปัจจุบัน (จาก config)
-        total_atk_current = calculate_total_atk(
-            current_values["ATK_CHAR"], atk_pet, atk_base,
-            current_values["Formation"], potential_pet,
-            buff_atk, buff_atk_pet
-        )
-        
-        # คำนวณ Total ATK - ค่าเปรียบเทียบ (จากผู้ใช้)
-        total_atk_compare = calculate_total_atk(
-            compare_values["ATK_CHAR"], atk_pet, atk_base,
-            compare_values["Formation"], potential_pet,
-            buff_atk, buff_atk_pet
-        )
-        
-        # คำนวณส่วนต่าง
-        atk_diff = total_atk_compare - total_atk_current
-        
-        # แสดงผลเปรียบเทียบ
-        print("\n=== ค่าปัจจุบัน (config.json) ===")
-        print(f"  Formation: {current_values['Formation']}%")
-        print(f"  ATK_CHAR: {current_values['ATK_CHAR']}")
-        print(f"  ATK_BASE: {atk_base} ({atk_base_desc})")
-        print(f"  >>> Total ATK: {total_atk_current:.2f}")
-        
-        print("\n=== ค่าเปรียบเทียบ (กรอกใหม่) ===")
-        print(f"  Formation: {compare_values['Formation']}%")
-        print(f"  ATK_CHAR: {compare_values['ATK_CHAR']}")
-        print(f"  ATK_BASE: {atk_base} ({atk_base_desc})")
-        print(f"  >>> Total ATK: {total_atk_compare:.2f}")
-        
-        print("\n" + "=" * 50)
-        print("=== ผลเปรียบเทียบ ===")
-        print("=" * 50)
-        
-        # แสดงส่วนต่าง ATK
-        if atk_diff > 0:
-            print(f"  ✅ ค่าใหม่ แซง +{atk_diff:.2f} ATK")
-        elif atk_diff < 0:
-            print(f"  ❌ ค่าปัจจุบัน เหนือกว่า +{abs(atk_diff):.2f} ATK")
-        else:
-            print(f"  ➡️ ATK เท่ากัน")
-        
+        run_atk_compare_mode()
         return
     
     # เลือกตัวละคร
