@@ -2,8 +2,6 @@
 Config Loader - โหลดและจัดการ config files
 """
 
-from __future__ import annotations
-
 import json
 from pathlib import Path
 from decimal import Decimal
@@ -21,10 +19,11 @@ def list_characters() -> list[str]:
 def load_json(path: Path) -> dict[str, Any]:
     """โหลด JSON และกรองค่า comment/metadata ออก"""
     if path.exists():
-        with open(path, 'r', encoding='utf-8') as f:
+        with open(path, "r", encoding="utf-8") as f:
             data = json.load(f)
-            return {k: v for k, v in data.items() 
-                    if not k.startswith("//") and not k.startswith("_")}
+            return {
+                k: v for k, v in data.items() if not k.startswith("//") and not k.startswith("_")
+            }
     return {}
 
 

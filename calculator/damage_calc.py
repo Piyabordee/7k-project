@@ -3,14 +3,11 @@
 สูตรการคำนวณดาเมจตาม AGENTS.md (แก้ไขแล้ว)
 """
 
-from __future__ import annotations
-
 from decimal import Decimal, ROUND_DOWN
-from typing import Union
 from constants import DEF_MODIFIER, ATK_BASE
 
 # Type alias for values that can be converted to Decimal
-NumericType = Union[int, float, str, Decimal]
+NumericType = int | float | str | Decimal
 
 
 def to_decimal(value: NumericType) -> Decimal:

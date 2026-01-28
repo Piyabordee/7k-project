@@ -2,8 +2,6 @@
 Menu - UI/Menu selection functions
 """
 
-from __future__ import annotations
-
 from typing import Any
 from config_loader import list_characters, load_character_full, load_monster_preset
 from decimal import Decimal

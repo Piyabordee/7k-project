@@ -7,10 +7,11 @@ import sys
 import io
 
 # Fix encoding for Windows console (Thai text support)
-sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
-sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding='utf-8')
+sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8")
+sys.stdin = io.TextIOWrapper(sys.stdin.buffer, encoding="utf-8")
 
 from decimal import Decimal
+
 from damage_calc import (
     calculate_total_atk,
     calculate_dmg_hp,
@@ -21,12 +22,7 @@ from damage_calc import (
     calculate_final_dmg,
 )
 from constants import get_atk_base
-from config_loader import (
-    load_user_config,
-    apply_weapon_set,
-    merge_configs,
-    get_decimal,
-)
+from config_loader import load_user_config, apply_weapon_set, merge_configs, get_decimal
 from menu import select_mode, select_character, select_skill
 from atk_compare_mode import run_atk_compare_mode
 from display import (
@@ -40,10 +36,9 @@ from display import (
     print_raw_damage,
     print_effective_def,
     print_final_damage_results,
-    print_espada_results,
     print_both_skills_results,
-    print_kill_status_block,
 )
+from character_registry import get_character_handler
 
 
 def main():
@@ -169,204 +164,52 @@ def main():
     effective_def = calculate_effective_def(def_target, def_buff, def_reduce, ignore_def)
     print_effective_def(effective_def)
     
-    # ตรวจสอบว่ามี HP Alteration หรือไม่ (Freyja)
-    hp_alteration = get_decimal(config, "HP_Alteration", "0")
-    
-    # ตรวจสอบว่าเป็น Freyja หรือไม่ (ใช้ logic พิเศษ - HP Alteration)
-    if char_name and char_name.lower() == "freyja" and hp_alteration > 0 and not is_both_skills:
-        from logic.freyja import calculate_freyja_damage, print_freyja_results
-        
-        freyja_result = calculate_freyja_damage(
-            total_atk=total_atk,
-            skill_dmg=skill_dmg,
-            crit_dmg=crit_dmg,
-            weak_dmg=weak_dmg,
-            dmg_amp_buff=dmg_amp_buff,
-            dmg_amp_debuff=dmg_amp_debuff,
-            dmg_reduction=dmg_reduction,
-            eff_def=effective_def,
-            skill_hits=skill_hits,
-            hp_target=hp_target,
-            hp_alteration=hp_alteration
-        )
-        
-        print_freyja_results(freyja_result, hp_target)
-        return
-    
-    # ตรวจสอบว่าเป็น Ryan หรือไม่ (ใช้ logic พิเศษ - Lost HP Bonus)
-    lost_hp_bonus = get_decimal(config, "Lost_HP_Bonus", "0")
-    weak_skill_dmg = get_decimal(config, "WEAK_SKILL_DMG", "0")
-    target_hp_percent = get_decimal(config, "Target_HP_Percent", "100")
-    
-    if char_name and char_name.lower() == "ryan" and lost_hp_bonus > 0 and not is_both_skills:
-        from logic.ryan import calculate_ryan_damage, print_ryan_results
-        
-        ryan_result = calculate_ryan_damage(
-            total_atk=total_atk,
-            skill_dmg=skill_dmg,
-            weak_skill_dmg=weak_skill_dmg,
-            crit_dmg=crit_dmg,
-            weak_dmg=weak_dmg,
-            dmg_amp_buff=dmg_amp_buff,
-            dmg_amp_debuff=dmg_amp_debuff,
-            dmg_reduction=dmg_reduction,
-            eff_def=effective_def,
-            skill_hits=skill_hits,
-            lost_hp_bonus=lost_hp_bonus,
-            target_hp_percent=target_hp_percent
-        )
-        
-        print_ryan_results(ryan_result)
-        return
-    
-    # ตรวจสอบว่าเป็น Klahan หรือไม่ (ใช้ logic พิเศษ - HP condition bonus)
-    hp_above_50_bonus = get_decimal(config, "HP_Above_50_Bonus", "0")
-    hp_below_50_bonus = get_decimal(config, "HP_Below_50_Bonus", "0")
-    
-    if char_name and char_name.lower() == "klahan" and (hp_above_50_bonus > 0 or hp_below_50_bonus > 0) and not is_both_skills:
-        from logic.klahan import calculate_klahan_damage, print_klahan_results
-        
-        # ดึงชื่อสกิลจาก skill_config
-        skill_name_display = skill_config.get("_name", "Skill")
-        if "_name" not in skill_config:
-            # ถ้าไม่มีชื่อใน config ให้หาจาก char_meta
-            skills = char_meta.get("_skills", {})
-            for key, val in skills.items():
-                if val.get("HP_Above_50_Bonus") == float(hp_above_50_bonus) or val.get("HP_Below_50_Bonus") == float(hp_below_50_bonus):
-                    skill_name_display = val.get("_name", key)
-                    break
-        
-        klahan_result = calculate_klahan_damage(
-            total_atk=total_atk,
-            skill_dmg=skill_dmg,
-            hp_above_50_bonus=hp_above_50_bonus,
-            hp_below_50_bonus=hp_below_50_bonus,
-            crit_dmg=crit_dmg,
-            weak_dmg=weak_dmg,
-            dmg_amp_buff=dmg_amp_buff,
-            dmg_amp_debuff=dmg_amp_debuff,
-            dmg_reduction=dmg_reduction,
-            eff_def=effective_def,
-            skill_hits=skill_hits,
-            skill_name=skill_name_display
-        )
-        
-        print_klahan_results(klahan_result)
-        return
-    
-    # ตรวจสอบว่าเป็น Sun Wukong + โหมดตีปราสาท (ใช้ Castle Mode logic)
-    if char_name and char_name.lower() == "sun_wukong" and monster_preset and not is_both_skills:
-        from logic.sun_wukong import calculate_sun_wukong_castle_mode, print_castle_mode_results
-        
-        # ดึงชื่อสกิลจาก skill_config
-        skill_name_display = skill_config.get("_name", "Skill")
-        if "_name" not in skill_config:
-            skills = char_meta.get("_skills", {})
-            for key, val in skills.items():
-                if val.get("SKILL_DMG") == float(skill_dmg):
-                    skill_name_display = val.get("_name", key)
-                    break
-        
-        wukong_result = calculate_sun_wukong_castle_mode(
-            total_atk=total_atk,
-            skill_dmg=skill_dmg,
-            crit_dmg=crit_dmg,
-            weak_dmg=weak_dmg,
-            dmg_amp_buff=dmg_amp_buff,
-            dmg_amp_debuff=dmg_amp_debuff,
-            dmg_reduction=dmg_reduction,
-            eff_def=effective_def,
-            skill_hits=skill_hits,
-            hp_target=hp_target,
-            skill_name=skill_name_display,
-            final_dmg_hp=final_dmg_hp
-        )
-        
-        print_castle_mode_results(wukong_result)
-        return
-    
-    # ตรวจสอบว่าเป็น Espada หรือไม่ (ใช้ logic พิเศษ)
-    if char_name and char_name.lower() == "espada" and bonus_dmg_hp_target > 0 and not is_both_skills:
-        from logic.espada import calculate_espada_damage
-        
-        espada_result = calculate_espada_damage(
-            total_atk, skill_dmg, crit_dmg, weak_dmg,
-            dmg_amp_buff, dmg_amp_debuff, dmg_reduction,
-            effective_def, hp_target, bonus_dmg_hp_target, cap_atk_percent
-        )
-        
-        print_espada_results(espada_result, weak_dmg, final_dmg_hp)
-        return
+    # ตรวจสอบว่าเป็นตัวละครที่มี special logic หรือไม่ (ใช้ Registry pattern)
+    if char_name:
+        handler = get_character_handler(char_name)
 
-    # ตรวจสอบว่าเป็น Biscuit หรือไม่ (ใช้ logic พิเศษ - Dual Scaling ATK + DEF)
-    if char_name and char_name.lower() == "biscuit":
-        from logic.biscuit import calculate_biscuit_damage, print_biscuit_results
-        
-        # อ่านค่า DEF_CHAR, DEF_PET จาก config หรือถาม User
-        print("\n--- Biscuit Special Stats Input ---")
-        try:
-            default_def_char = config.get("DEF_CHAR", "0")
-            in_def_char = input(f"Enter DEF_CHAR (Default {default_def_char}): ").strip()
-            def_char = Decimal(in_def_char) if in_def_char else Decimal(str(default_def_char))
-            
-            default_def_pet = config.get("DEF_PET", "0")
-            in_def_pet = input(f"Enter DEF_PET (Default {default_def_pet}): ").strip()
-            def_pet = Decimal(in_def_pet) if in_def_pet else Decimal(str(default_def_pet))
-        except Exception as e:
-            print(f"Input Error: {e}. Using config values.")
-            def_char = get_decimal(config, "DEF_CHAR", "0")
-            def_pet = get_decimal(config, "DEF_PET", "0")
-        
-        # Biscuit มี 2 parts: ATK scaling (SKILL_DMG) + DEF scaling (SKILL_DMG_fromDef)
-        # เราต้องหาค่า SKILL_DMG ที่เป็น part ของ DEF
-        # สมมติว่าใน config json เก็บแยก หรือถ้าไม่ได้แยก เราอาจต้อง hardcode หรือดึงจาก _notes?
-        # User prompt indicates Biscuit config has "Skill 2: +135% DEF Scaling" in _notes
-        # But wait, in the JSON we made:
-        # "skill2": { "SKILL_DMG": 115.00, ... }
-        # The DEF scaling (135%) wasn't in a specific field in the JSON structure I created, only in notes.
-        # I need to EXTRACT it or rely on user adding it to config.
-        # "SKILL_DMG_fromDef" is what logic.biscuit expects.
-        # Let's check config for "SKILL_DMG_fromDef", default to 135 if skill is skill2 (Leap Attack).
-        
-        skill_dmg_from_def = get_decimal(config, "SKILL_DMG_DEF", "0")
-        
-        # Auto-detect check removed as user provided it in JSON
-        if skill_dmg_from_def == 0 and "Leap Attack" in skill_config.get("_name", ""):
-             # Fallback if not updated in json yet, but user just updated it.
-             # Let's keep a fallback or just trust the config.
-             # User said "Use this", so I rely on config.
-             pass
-        
-        biscuit_result = calculate_biscuit_damage(
-            total_atk=total_atk,
-            skill_dmg_atk=skill_dmg,
-            skill_dmg_def=skill_dmg_from_def,
-            crit_dmg=crit_dmg,
-            weak_dmg=weak_dmg,
-            dmg_amp_buff=dmg_amp_buff,
-            dmg_amp_debuff=dmg_amp_debuff,
-            dmg_reduction=dmg_reduction,
-            eff_def=effective_def,
-            skill_hits=skill_hits,
-            def_char=def_char,
-            def_pet=def_pet,
-            final_dmg_hp=final_dmg_hp
-        )
-        
-        print_biscuit_results(biscuit_result)
-        
-        # Castle Mode Check (ถ้าเลือกโหมด 2 มี monster_preset)
-        if monster_preset and monster_preset.get("HP_Target"):
-            hp_target = Decimal(monster_preset["HP_Target"])
-            dmg_normal = biscuit_result["total_skill_dmg_normal"]
-            dmg_crit = biscuit_result["total_skill_dmg_crit"]
-            
-            print_kill_status_block(
-                hp_target,
-                dmg_crit, "คริ",
-                dmg_normal, "ธรรมดา"
+        if handler:
+            # เตรียมค่าที่จำเป็นสำหรับ handler
+            config_for_handler = {
+                "HP_Alteration": get_decimal(config, "HP_Alteration", "0"),
+                "Lost_HP_Bonus": get_decimal(config, "Lost_HP_Bonus", "0"),
+                "WEAK_SKILL_DMG": get_decimal(config, "WEAK_SKILL_DMG", "0"),
+                "Target_HP_Percent": get_decimal(config, "Target_HP_Percent", "100"),
+                "HP_Above_50_Bonus": get_decimal(config, "HP_Above_50_Bonus", "0"),
+                "HP_Below_50_Bonus": get_decimal(config, "HP_Below_50_Bonus", "0"),
+                "Bonus_DMG_HP_Target": bonus_dmg_hp_target,
+                "Cap_ATK_Percent": cap_atk_percent,
+                "DEF_CHAR": config.get("DEF_CHAR", "0"),
+                "DEF_PET": config.get("DEF_PET", "0"),
+                "SKILL_DMG_DEF": get_decimal(config, "SKILL_DMG_DEF", "0"),
+                "Final_DMG_HP": final_dmg_hp,
+                "_is_both_skills": is_both_skills,
+            }
+
+            # เพิ่มข้อมูลเพิ่มเติมลงใน skill_config
+            skill_config_for_handler = skill_config.copy()
+            skill_config_for_handler["_is_both_skills"] = is_both_skills
+
+            # เรียกใช้ handler
+            handled = handler(
+                total_atk=total_atk,
+                skill_dmg=skill_dmg,
+                crit_dmg=crit_dmg,
+                weak_dmg=weak_dmg,
+                dmg_amp_buff=dmg_amp_buff,
+                dmg_amp_debuff=dmg_amp_debuff,
+                dmg_reduction=dmg_reduction,
+                eff_def=effective_def,
+                skill_hits=skill_hits,
+                hp_target=hp_target,
+                config=config_for_handler,
+                char_meta=char_meta,
+                skill_config=skill_config_for_handler,
+                monster_preset=monster_preset,
             )
-        return
+
+            if handled:
+                return  # Handler จัดการเรียบร้อยแล้ว
     
     # 5. Final Damage (ต่อ 1 hit) - สำหรับตัวละครปกติ
     final_dmg_crit = calculate_final_dmg(raw_dmg_crit, effective_def)

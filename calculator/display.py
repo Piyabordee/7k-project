@@ -2,8 +2,6 @@
 Display - ฟังก์ชันแสดงผลทั้งหมด
 """
 
-from __future__ import annotations
-
 from decimal import Decimal
 from typing import Any
 from damage_calc import (
