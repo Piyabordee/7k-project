@@ -8,7 +8,9 @@
   <img src="https://img.shields.io/badge/Type_Hints-100%25-blueviolet?style=for-the-badge" alt="Type Hints">
   <img src="https://img.shields.io/badge/AI_Powered-90%25-purple?style=for-the-badge&logo=openai&logoColor=white" alt="AI Powered">
 
-  <h3>Advanced Damage Optimization Tool for End-Game Players</h3>
+  <p>
+    <b>Advanced Damage Optimization Tool for End-Game Players</b>
+  </p>
 
   <p>
     Reverse-engineered damage formulas • Castle Rush Simulator • Precision CLI • Registry Pattern
@@ -18,17 +20,6 @@
 
 ---
 
-## 📑 Table of Contents
-- [🤖 AI Development Disclaimer](#-ai-development-disclaimer)
-- [🚀 Overview](#-overview)
-- [✨ Key Features](#-key-features)
-- [🛠️ Installation](#-installation)
-- [🎮 Usage Guide](#-usage-guide)
-- [⚙️ Configuration](#-configuration)
-- [📂 Project Structure](#-project-structure)
-- [📜 License](#-license)
-
----
 
 ## 🤖 AI Development Disclaimer
 
@@ -72,10 +63,10 @@ It is specifically designed for:
 
 ## 🛠️ Installation
 
-### Prerequisites
+### 📋 Prerequisites
 *   Python 3.10 or higher (for modern type hints support)
 
-### Quick Start
+### 🚀 Quick Start
 
 ```bash
 # 1. Clone the repository
