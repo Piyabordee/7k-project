@@ -87,7 +87,6 @@ All files have complete type hints for:
 
 ### Features Used:
 ```python
-from __future__ import annotations  # Modern type hints
 from typing import Any              # Generic types
 from decimal import Decimal         # Precision math
 
@@ -103,7 +102,7 @@ def calculate_damage(
 ### Type Aliases:
 ```python
 # damage_calc.py
-NumericType = Union[int, float, str, Decimal]  # Values that can be Decimal
+NumericType = int | float | str | Decimal  # Values that can be Decimal (Python 3.10+ syntax)
 ```
 
 ---
@@ -747,110 +746,45 @@ python main.py           # Interactive mode
 ## 🤖 AI Agent Onboarding
 
 ### Quick Start for New AI Agents
-If you're a new AI agent joining this project, here's what you need to know:
 
 **Project Status:** ✅ Production-Ready (Professionalism Score: 9/10)
 
-**Recent Major Changes (2026-01-30):**
-- ✅ Removed all deprecated `__future__` imports (Python 3.10+ compatible)
-- ✅ Eliminated unprofessional `sys.path` manipulation patterns
-- ✅ Fixed global system modification issues (encoding in main block only)
-- ✅ Separated input concerns from business logic
-- ✅ Replaced all magic numbers with constants
-- ✅ All character logic verified 100% working
+**Essential Patterns:**
+- **Registry Pattern** - Characters self-register via `@register_character()` (no main.py modification)
+- **No deprecated imports** - Python 3.10+ syntax (`X | Y` not `Union[X, Y]`)
+- **No input() in handlers** - Business logic accepts parameters only
+- **Decimal for math** - Always use Decimal, not float
+- **Use constants** - Don't hardcode magic numbers
 
-**Key Patterns to Follow:**
-1. **No sys.path manipulation** - Use proper package imports
-2. **No deprecated imports** - Python 3.10+ doesn't need `__future__`
-3. **No input() in handlers** - Business logic accepts parameters
-4. **Use constants** - Don't hardcode magic numbers
-5. **Type hints required** - 100% type-annotated codebase
-6. **Registry Pattern** - Characters self-register their logic
-7. **Decimal for math** - Always use Decimal, not float
-
-**Testing Before Pushing:**
+**Quick Verification:**
 ```bash
-python calculator/tests/test_imports.py           # Test imports
-python calculator/tests/test_all_logic.py         # Test all character logic
+python calculator/tests/test_imports.py      # Verify imports
+python calculator/tests/test_all_logic.py    # Test all logic
 ```
 
-**Test Documentation:** See `calculator/tests/README.md` for detailed test descriptions and expected results.
-
-**Documentation to Update:**
-- `AGENTS.md` - This file (AI agent guide)
-- `VERIFICATION_REPORT.md` - Code quality reports
-- `README.md` - User-facing updates
-
-**Verification:**
-- All character logic must match `docs/SHOWCASES.md` examples
-- No deprecated code patterns
-- Clean import structure
-- Proper separation of concerns
+**Documentation:** See `calculator/tests/README.md` for test details and `VERIFICATION_REPORT.md` for code quality reports.
 
 ---
 
 ## 📝 Changelog
 
 ### 2026-01-30: Code Quality Audit & Modernization
-- **Code Quality Improvements:**
-  - Removed all deprecated `__future__` imports (4 files)
-  - Eliminated unprofessional `sys.path` manipulation (3 logic files)
-  - Fixed global system modification (moved encoding to main block)
-  - Separated input concerns from business logic (Biscuit handler)
-  - Replaced magic numbers with constants (DEF_BASE)
-- **Testing & Verification:**
-  - Created `test_imports.py` for import verification
-  - Created `test_all_logic.py` for comprehensive logic testing
-  - Verified all character logic 100% working
-  - Freyja HP Alteration matches showcase exactly (61,000,000)
-  - All imports resolve correctly without sys.path manipulation
-- **Documentation:**
-  - Created `VERIFICATION_REPORT.md` with complete audit details
-  - Updated README.md with recent improvements
-  - Professionalism Score improved: 7/10 → 9/10
-- **Status:** ✅ Production-Ready, all issues resolved
+- ✅ Removed all deprecated `__future__` imports
+- ✅ Eliminated `sys.path` manipulation (3 files)
+- ✅ Separated input concerns from business logic
+- ✅ Replaced magic numbers with constants
+- ✅ Created test suite (`test_imports.py`, `test_all_logic.py`)
+- ✅ All character logic verified 100% working
+- **Status:** Production-Ready (Professionalism Score: 9/10)
 
-### 2026-01-28: Modernization Refactor & Biscuit
-- **Added Biscuit character** - Dual Scaling (ATK + DEF) mechanics
-- **Implemented Registry Pattern**:
-  - Created `character_registry.py` for extensible character handling
-  - Replaced 160+ lines of if/elif chains with decorator-based registration
-  - Each character now self-registers its logic
-  - No main.py modification needed for new characters
-- **Modernized codebase:**
-  - Added `pyproject.toml` for modern Python project management
-  - Updated type hints to Python 3.10+ syntax (`X | Y` instead of `Union[X, Y]`)
-  - Removed unnecessary `from __future__ import annotations`
-  - Python requirement: 3.10+ (from 3.10+)
-- **Added test suite** - `test_all_characters.py` for integration testing
-- **Benefits:**
-  - More maintainable and testable
-  - Easier to extend with new characters
-  - Follows SOLID principles (Open/Closed)
+### 2026-01-28: Registry Pattern & Biscuit
+- Implemented Registry Pattern for extensible character handling
+- Replaced 160+ lines of if/elif chains with `@register_character()` decorator
+- Added Biscuit character (Dual Scaling ATK + DEF)
+- Added `pyproject.toml`, updated to Python 3.10+ syntax
 
-### 2026-01-25: ATK Compare Mode
-- Changed mode 3 from "Calculate ATK only" to **"ATK Compare"**
-- Added `input_compare_values()` function in `menu.py`
-- Added `select_atk_base()` for selecting ATK_BASE (Legend/Rare/Custom)
-- Display comparison between config.json and new input values
-
-### 2026-01-24: Type Hints Refactor
-- Added type hints to all files (100% coverage)
-- Used `from __future__ import annotations` for modern syntax
-- Added `NumericType` type alias in `damage_calc.py`
-- Updated Python requirement to 3.10+
-
-### 2026-01-20: Sun Wukong Castle Mode
-- Added `logic/sun_wukong.py` - Castle Mode calculator
-  - Calculate minimum crits needed to kill monster
-  - Assumes all hits apply weakness, some hits may also crit
-- Added `Weapon_Set = 4` Hydra Castle (DMG_AMP +30%)
-- Updated AGENTS.md
-
-### 2026-01-12: Major Refactor
-- Split `main.py` (720 lines → ~300 lines) into:
-  - `config_loader.py` - Load/merge config
-  - `menu.py` - UI selection
-  - `display.py` - Output functions
-- Added monster presets for Castle mode
-- Improved AGENTS.md completeness
+### Earlier Updates
+- **2026-01-25:** ATK Compare Mode
+- **2026-01-24:** Type Hints Refactor (100% coverage)
+- **2026-01-20:** Sun Wukong Castle Mode
+- **2026-01-12:** Major Refactor (split main.py → config_loader, menu, display)
