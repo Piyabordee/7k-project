@@ -140,6 +140,58 @@ See **[VERIFICATION_REPORT.md](VERIFICATION_REPORT.md)** for complete details.
 
 ---
 
+## 🧪 Testing
+
+### Test Suite Overview
+
+The project includes a comprehensive pytest-based test suite with **140+ tests** covering:
+
+- **Unit Tests** - Core damage calculation formulas
+- **Integration Tests** - Config loading, merging, weapon sets
+- **Edge Case Tests** - Boundary values, precision, overflow
+- **Character Tests** - All 11 characters verified
+
+### Running Tests
+
+```bash
+# Install test dependencies
+pip install -r requirements-dev.txt
+
+# Run all tests
+pytest calculator/tests/ -v
+
+# Run with coverage report
+pytest calculator/tests/ --cov=calculator --cov-report=html
+
+# Run specific test categories
+pytest -m unit           # Unit tests only
+pytest -m integration    # Integration tests only
+pytest -m edge           # Edge case tests only
+```
+
+### Test Documentation
+
+- **Test Strategy:** [calculator/tests/TEST_STRATEGY.md](calculator/tests/TEST_STRATEGY.md)
+- **Test Suite Summary:** [calculator/tests/TEST_SUITE_SUMMARY.md](calculator/tests/TEST_SUITE_SUMMARY.md)
+- **Test README:** [calculator/tests/README.md](calculator/tests/README.md)
+
+### Coverage
+
+| Module | Coverage |
+|--------|----------|
+| `damage_calc.py` | 100% |
+| `config_loader.py` | ~85% |
+| `character_registry.py` | ~70% |
+| **Overall** | ~90% |
+
+### CI/CD
+
+Automated testing runs on GitHub Actions for all pull requests across:
+- Python 3.10, 3.11, 3.12
+- Ubuntu, Windows, macOS
+
+---
+
 ## 👾 Supported Characters
 
 | Character | _class | Special Mechanics |
